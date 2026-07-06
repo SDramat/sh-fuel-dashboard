@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fuel Dispensing — Diesel Tank</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#141C24;
+    --ink-2:#3A4A5A;
+    --muted:#7A8A99;
+    --line:#DCE2E8;
+    --bg:#EBEEF2;
+    --surface:#FFFFFF;
+    --amber:#E8933A;
+    --amber-deep:#C6721B;
+    --shb:#4C6EF5;
+    --shbe:#5FA845;
+    --shm:#DB5F97;
+    --good:#2E9E6B;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    font-family:'Inter',system-ui,sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    padding:28px 22px 60px;
+    line-height:1.4;
+  }
+  .wrap{max-width:1180px;margin:0 auto}
+
+  /* Header */
+  header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:22px}
+  .title-block .eyebrow{
+    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--amber-deep);font-weight:600;margin-bottom:6px;
+  }
+  h1{font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:700;letter-spacing:-.02em;line-height:1.05}
+  .subtitle{color:var(--muted);font-size:13px;margin-top:5px}
+  .meta{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-2);line-height:1.7}
+  .meta .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--good);margin-right:5px;vertical-align:middle}
+  .meta b{color:var(--ink);font-weight:700}
+
+  /* Tabs */
+  .tabs{display:flex;gap:2px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px;margin-bottom:22px;width:fit-content;max-width:100%;overflow-x:auto}
+  .tab{
+    font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;
+    border:none;background:none;color:var(--ink-2);padding:9px 20px;border-radius:8px;
+    cursor:pointer;white-space:nowrap;transition:.15s;
+  }
+  .tab:hover{color:var(--ink)}
+  .tab.active{background:var(--ink);color:#fff}
+
+  /* Cards */
+  .card-grid{display:grid;gap:12px;margin-bottom:12px}
+  .month-row{display:grid;grid-template-columns:88px repeat(4,1fr);gap:12px;align-items:stretch}
+  .month-label{
+    display:flex;flex-direction:column;justify-content:center;
+    font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;color:var(--ink);
+    padding-left:2px;
+  }
+  .month-label span{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);font-weight:500;letter-spacing:.05em}
+  .metric{
+    background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;
+    display:flex;flex-direction:column;gap:6px;transition:.15s;
+  }
+  .metric:hover{border-color:#C4CDD6;box-shadow:0 4px 14px rgba(20,28,36,.05)}
+  .metric .k{font-size:11px;color:var(--muted);font-weight:500;letter-spacing:.02em}
+  .metric .v{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+  .metric.saving .v{color:var(--amber-deep)}
+  .metric .u{font-size:12px;color:var(--muted);font-weight:500}
+
+  .col-head{display:grid;grid-template-columns:88px repeat(4,1fr);gap:12px;margin-bottom:8px;padding:0 2px}
+  .col-head div{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  .col-head div:first-child{visibility:hidden}
+
+  /* YTD hero cards */
+  .ytd-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px}
+  .ytd{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px}
+  .ytd .k{font-size:12px;color:var(--muted);font-weight:500;margin-bottom:10px}
+  .ytd .v{font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+  .ytd .u{font-size:14px;color:var(--muted)}
+  .ytd.saving{background:linear-gradient(155deg,#FFF6EC,#FFFFFF);border-color:#F0D9BE}
+  .ytd.saving .v{color:var(--amber-deep)}
+  .ytd .sub{font-size:11px;color:var(--muted);margin-top:8px;font-family:'JetBrains Mono',monospace}
+
+  /* Charts */
+  .charts{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:6px}
+  .chart{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 18px 10px}
+  .chart h3{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;margin-bottom:2px}
+  .chart .ch-sub{font-size:11px;color:var(--muted);margin-bottom:14px}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;margin:14px 0 4px;padding-top:12px;border-top:1px solid var(--line)}
+  .legend span{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ink-2);font-weight:500}
+  .legend i{width:11px;height:11px;border-radius:3px;display:inline-block}
+  svg{display:block;width:100%;height:auto;overflow:visible}
+  .bar{transition:opacity .15s}
+  .bar:hover{opacity:.78}
+  .axis-label{font-family:'JetBrains Mono',monospace;font-size:9.5px;fill:var(--muted)}
+  .val-label{font-family:'JetBrains Mono',monospace;font-size:9px;fill:var(--ink-2);font-weight:600}
+  .tot-label{font-family:'JetBrains Mono',monospace;font-size:10px;fill:var(--ink);font-weight:700}
+  .grid-line{stroke:var(--line);stroke-width:1}
+
+  footer{margin-top:26px;padding-top:16px;border-top:1px solid var(--line);font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;line-height:1.7}
+
+  @media(max-width:820px){
+    .charts{grid-template-columns:1fr}
+    .ytd-grid{grid-template-columns:repeat(2,1fr)}
+    .month-row,.col-head{grid-template-columns:60px repeat(2,1fr);}
+    .month-row .metric:nth-child(n+4){grid-column:span 1}
+    .col-head{display:none}
+    h1{font-size:24px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="title-block">
+      <div class="eyebrow">Sustainable Heating · Fleet Operations</div>
+      <h1>Fuel Dispensing — Diesel Tank</h1>
+      <div class="subtitle">Aspen BIOMASS Bowser · live from Supabase <code>fuel_purchases</code></div>
+    </div>
+    <div class="meta">
+      <div><span class="dot"></span>Source: <b>sh-ops-intelligence</b></div>
+      <div>Records: <b id="rowcount">273</b> · Generated <b id="gendate"></b></div>
+    </div>
+  </header>
+
+  <div class="tabs" id="tabs">
+    <button class="tab" data-view="q1">2026 · Q1</button>
+    <button class="tab" data-view="q2">2026 · Q2</button>
+    <button class="tab active" data-view="q3">2026 · Q3</button>
+    <button class="tab" data-view="year">Yearly</button>
+  </div>
+
+  <div id="cards"></div>
+
+  <div class="charts">
+    <div class="chart">
+      <h3>Monthly Refills by Division</h3>
+      <div class="ch-sub">Dispensing events · stacked</div>
+      <div id="chart-refills"></div>
+      <div class="legend" id="leg1"></div>
+    </div>
+    <div class="chart">
+      <h3>Monthly Litres by Division</h3>
+      <div class="ch-sub">Litres dispensed · grouped</div>
+      <div id="chart-litres"></div>
+      <div class="legend" id="leg2"></div>
+    </div>
+    <div class="chart">
+      <h3>Monthly Cost by Division</h3>
+      <div class="ch-sub">Tank cost @ R25.67/L · grouped</div>
+      <div id="chart-cost"></div>
+      <div class="legend" id="leg3"></div>
+    </div>
+    <div class="chart">
+      <h3>Monthly Savings by Division</h3>
+      <div class="ch-sub">vs market @ R28.93/L · grouped</div>
+      <div id="chart-saving"></div>
+      <div class="legend" id="leg4"></div>
+    </div>
+  </div>
+
+  <footer>
+    Tank rate R25.67/L · Market rate R28.93/L · savings = litres × R3.26.<br>
+    Snapshot dashboard — regenerated on request from Supabase. Not auto-refreshing; ask Jarvis to rebuild after new imports.
+  </footer>
+</div>
+
+<script>
+const COL = {"SHB - Shredding":"#4C6EF5","SHBE - Chipping":"#5FA845","SHM - Manufacturing":"#DB5F97"};
+const SHORT = {"SHB - Shredding":"SHB · Shredding","SHBE - Chipping":"SHBE · Chipping","SHM - Manufacturing":"SHM · Manufacturing"};
+const DIVS = ["SHB - Shredding","SHBE - Chipping","SHM - Manufacturing"];
+const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+// [refills, litres, tank_cost, saving] per division, indexed by month number (1-12)
+const DATA = {
+  1:{}, // January — no data
+  2:{"SHB - Shredding":[13,3078.97,52904.00,7289.86],"SHBE - Chipping":[11,3184.16,54234.45,8015.88],"SHM - Manufacturing":[17,620.68,10714.57,1419.71]},
+  3:{"SHB - Shredding":[18,4348.23,76346.87,15755.19],"SHBE - Chipping":[18,6392.12,112034.86,22778.39],"SHM - Manufacturing":[23,859.86,15123.53,3165.54]},
+  4:{"SHB - Shredding":[22,5569.44,142967.52,18156.38],"SHBE - Chipping":[13,4291.36,107512.62,14168.05],"SHM - Manufacturing":[23,878.98,22563.42,2865.48]},
+  5:{"SHB - Shredding":[14,3685.75,94613.20,12015.54],"SHBE - Chipping":[16,4256.29,109258.98,13875.52],"SHM - Manufacturing":[23,1214.09,31165.69,3957.93]},
+  6:{"SHB - Shredding":[17,2998.01,76958.92,9773.52],"SHBE - Chipping":[9,2130.75,54696.36,6946.25],"SHM - Manufacturing":[22,782.34,20082.69,2550.44]},
+  7:{"SHB - Shredding":[7,1017.33,26114.85,3316.49],"SHBE - Chipping":[1,388.19,9964.84,1265.50],"SHM - Manufacturing":[6,220.04,5648.43,717.33]},
+  8:{},9:{},10:{},11:{},12:{}
+};
+const QUARTERS = {q1:[1,2,3],q2:[4,5,6],q3:[7,8,9]};
+
+// helpers
+const val=(m,d,i)=>(DATA[m]&&DATA[m][d])?DATA[m][d][i]:0;
+const monTot=(m,i)=>DIVS.reduce((s,d)=>s+val(m,d,i),0);
+const fmtR=n=>"R"+Math.round(n).toLocaleString("en-ZA");
+const fmtL=n=>n.toLocaleString("en-ZA",{minimumFractionDigits:2,maximumFractionDigits:2})+" L";
+const fmtK=n=>{if(n>=1000)return (n/1000).toFixed(n>=10000?0:1)+"K";return Math.round(n).toString();};
+
+document.getElementById("gendate").textContent = new Date().toLocaleDateString("en-ZA",{day:"2-digit",month:"short",year:"numeric"});
+
+// ---- Cards ----
+function renderCards(view){
+  const el=document.getElementById("cards");
+  if(view==="year"){
+    const t=[0,1,2,3].map(i=>{let s=0;for(let m=1;m<=12;m++)s+=monTot(m,i);return s;});
+    const q=(qk)=>QUARTERS[qk].reduce((a,m)=>a+monTot(m,0),0);
+    el.innerHTML=`
+      <div class="ytd-grid">
+        <div class="ytd"><div class="k">Total Refills · YTD</div><div class="v">${t[0]}</div><div class="sub">Q1 ${q("q1")} · Q2 ${q("q2")} · Q3 ${q("q3")}</div></div>
+        <div class="ytd"><div class="k">Total Litres · YTD</div><div class="v">${(t[1]/1000).toFixed(2)}<span class="u">K L</span></div><div class="sub">${fmtL(t[1])}</div></div>
+        <div class="ytd"><div class="k">Total Cost · YTD</div><div class="v">${fmtR(t[2])}</div><div class="sub">@ R25.67 / litre</div></div>
+        <div class="ytd saving"><div class="k">Total Saving · YTD</div><div class="v">${fmtR(t[3])}</div><div class="sub">vs market rate</div></div>
+      </div>`;
+    return;
+  }
+  const months=QUARTERS[view];
+  let rows=`<div class="col-head"><div></div><div>Refills</div><div>Litres</div><div>Cost</div><div>Saving</div></div><div class="card-grid">`;
+  months.forEach(m=>{
+    const r=monTot(m,0),l=monTot(m,1),c=monTot(m,2),s=monTot(m,3);
+    rows+=`
+      <div class="month-row">
+        <div class="month-label">${MONTHS[m-1]}<span>2026</span></div>
+        <div class="metric"><div class="k">Total Refills</div><div class="v">${r}</div></div>
+        <div class="metric"><div class="k">Total Litres</div><div class="v">${l.toLocaleString("en-ZA",{minimumFractionDigits:2,maximumFractionDigits:2})}<span class="u"> L</span></div></div>
+        <div class="metric"><div class="k">Total Cost</div><div class="v">${fmtR(c)}</div></div>
+        <div class="metric saving"><div class="k">Total Saving</div><div class="v">${fmtR(s)}</div></div>
+      </div>`;
+  });
+  rows+=`</div>`;
+  el.innerHTML=rows;
+}
+
+// ---- Legends ----
+function legends(){
+  const html=DIVS.map(d=>`<span><i style="background:${COL[d]}"></i>${SHORT[d]}</span>`).join("");
+  ["leg1","leg2","leg3","leg4"].forEach(id=>document.getElementById(id).innerHTML=html);
+}
+
+// active months for charts = months that have data (Feb–Jul)
+const ACTIVE=[2,3,4,5,6,7];
+
+// ---- Stacked bar (refills) ----
+function stacked(elId,metricIdx){
+  const W=560,H=230,padL=34,padR=12,padT=22,padB=34;
+  const iw=W-padL-padR, ih=H-padT-padB;
+  const max=Math.max(...ACTIVE.map(m=>monTot(m,metricIdx)))*1.15||1;
+  const bw=iw/ACTIVE.length*0.56, gap=iw/ACTIVE.length;
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img">`;
+  for(let g=0;g<=3;g++){const y=padT+ih-(ih*g/3);const gv=Math.round(max*g/3);
+    s+=`<line class="grid-line" x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}"/><text class="axis-label" x="${padL-6}" y="${y+3}" text-anchor="end">${gv}</text>`;}
+  ACTIVE.forEach((m,i)=>{
+    const cx=padL+gap*i+gap/2, x=cx-bw/2;
+    let acc=0;
+    DIVS.forEach(d=>{
+      const v=val(m,d,metricIdx);if(v<=0)return;
+      const h=ih*v/max, y=padT+ih-acc-h;
+      s+=`<rect class="bar" x="${x}" y="${y}" width="${bw}" height="${h}" fill="${COL[d]}" rx="1.5"><title>${SHORT[d]} — ${MONTHS[m-1]}: ${v}</title></rect>`;
+      if(h>13)s+=`<text class="val-label" x="${cx}" y="${y+h/2+3}" text-anchor="middle" fill="#fff">${v}</text>`;
+      acc+=h;
+    });
+    const tot=monTot(m,metricIdx);
+    s+=`<text class="tot-label" x="${cx}" y="${padT+ih-acc-6}" text-anchor="middle">${tot}</text>`;
+    s+=`<text class="axis-label" x="${cx}" y="${H-padB+16}" text-anchor="middle">${MONTHS[m-1]}</text>`;
+  });
+  s+=`</svg>`;document.getElementById(elId).innerHTML=s;
+}
+
+// ---- Grouped bar (litres / cost / saving) ----
+function grouped(elId,metricIdx,fmt){
+  const W=560,H=230,padL=42,padR=12,padT=22,padB=34;
+  const iw=W-padL-padR, ih=H-padT-padB;
+  let max=0;ACTIVE.forEach(m=>DIVS.forEach(d=>{max=Math.max(max,val(m,d,metricIdx));}));max*=1.18||1;
+  const slot=iw/ACTIVE.length, gbw=slot*0.72/3, inGap=slot*0.72;
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img">`;
+  for(let g=0;g<=3;g++){const y=padT+ih-(ih*g/3);
+    s+=`<line class="grid-line" x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}"/><text class="axis-label" x="${padL-6}" y="${y+3}" text-anchor="end">${fmtK(max*g/3)}</text>`;}
+  ACTIVE.forEach((m,i)=>{
+    const base=padL+slot*i+(slot-inGap)/2;
+    DIVS.forEach((d,j)=>{
+      const v=val(m,d,metricIdx);
+      const h=v>0?ih*v/max:0, x=base+gbw*j, y=padT+ih-h;
+      if(h>0){
+        s+=`<rect class="bar" x="${x}" y="${y}" width="${gbw-1.5}" height="${h}" fill="${COL[d]}" rx="1.5"><title>${SHORT[d]} — ${MONTHS[m-1]}: ${fmt(v)}</title></rect>`;
+        s+=`<text class="val-label" x="${x+(gbw-1.5)/2}" y="${y-3}" text-anchor="middle" transform="rotate(-90 ${x+(gbw-1.5)/2} ${y-3})" style="font-size:8px">${fmtK(v)}</text>`;
+      }
+    });
+    s+=`<text class="axis-label" x="${base+inGap/2}" y="${H-padB+16}" text-anchor="middle">${MONTHS[m-1]}</text>`;
+  });
+  s+=`</svg>`;document.getElementById(elId).innerHTML=s;
+}
+
+function renderCharts(){
+  stacked("chart-refills",0);
+  grouped("chart-litres",1,fmtL);
+  grouped("chart-cost",2,fmtR);
+  grouped("chart-saving",3,fmtR);
+}
+
+// ---- Tabs ----
+document.getElementById("tabs").addEventListener("click",e=>{
+  const b=e.target.closest(".tab");if(!b)return;
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  b.classList.add("active");
+  renderCards(b.dataset.view);
+});
+
+// init
+renderCards("q3");
+legends();
+renderCharts();
+</script>
+</body>
+</html>
