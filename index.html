@@ -126,7 +126,7 @@
     </div>
     <div class="meta">
       <div><span class="dot"></span>Source: <b>sh-ops-intelligence</b></div>
-      <div>Records: <b id="rowcount">294</b> · Generated <b id="gendate"></b></div>
+      <div>Records: <b id="rowcount">452</b> · Generated <b id="gendate"></b></div>
     </div>
   </header>
 
@@ -180,14 +180,16 @@ const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov
 
 // [refills, litres, tank_cost, saving] per division, indexed by month number (1-12)
 const DATA = {
-  1:{}, // January — no data
+  1:{},
   2:{"SHB - Shredding":[13,3078.97,52904.00,7289.86],"SHBE - Chipping":[11,3184.16,54234.45,8015.88],"SHM - Manufacturing":[17,620.68,10714.57,1419.71]},
   3:{"SHB - Shredding":[18,4348.23,76346.87,15755.19],"SHBE - Chipping":[18,6392.12,112034.86,22778.39],"SHM - Manufacturing":[23,859.86,15123.53,3165.54]},
   4:{"SHB - Shredding":[22,5569.44,142967.52,18156.38],"SHBE - Chipping":[13,4291.36,107512.62,14168.05],"SHM - Manufacturing":[23,878.98,22563.42,2865.48]},
   5:{"SHB - Shredding":[14,3685.75,94613.20,12015.54],"SHBE - Chipping":[16,4256.29,109258.98,13875.52],"SHM - Manufacturing":[23,1214.09,31165.69,3957.93]},
   6:{"SHB - Shredding":[17,2998.01,76958.92,9773.52],"SHBE - Chipping":[9,2130.75,54696.36,6946.25],"SHM - Manufacturing":[22,782.34,20082.69,2550.44]},
-  7:{"SHB - Shredding":[15,3720.22,95498.04,12127.92],"SHBE - Chipping":[3,1233.43,31662.15,4020.98],"SHM - Manufacturing":[17,588.89,15116.81,1919.79]},
-  8:{},9:{},10:{},11:{},12:{}
+  7:{"SHB - Shredding":[20,5174.08,132818.63,16867.50],"SHBE - Chipping":[9,3278.82,84167.31,10688.95],"SHM - Manufacturing":[21,724.17,18589.44,2360.80],"SHB":[3,681.22,17486.92,2220.78],"SHBE":[2,626.00,16069.42,2040.76],"SHM":[6,231.73,5948.50,755.45]},
+  8:{"SHB - Shredding":[24,4970.58,127594.79,16204.10],"SHBE - Chipping":[22,7587.44,194769.60,24735.06],"SHM - Manufacturing":[31,1228.28,31529.95,4004.20]},
+  9:{"SHB - Shredding":[14,2887.47,74121.37,9413.15],"SHBE - Chipping":[15,5366.85,137767.03,17495.94],"SHM - Manufacturing":[26,1027.73,26381.84,3350.39]},
+  10:{},11:{},12:{}
 };
 const QUARTERS = {q1:[1,2,3],q2:[4,5,6],q3:[7,8,9]};
 
@@ -238,8 +240,8 @@ function legends(){
   ["leg1","leg2","leg3","leg4"].forEach(id=>document.getElementById(id).innerHTML=html);
 }
 
-// active months for charts = months that have data (Feb–Jul)
-const ACTIVE=[2,3,4,5,6,7];
+// active months for charts = months that have data
+const ACTIVE=[2,3,4,5,6,7,8,9];
 
 // ---- Stacked bar (refills) ----
 function stacked(elId,metricIdx){
